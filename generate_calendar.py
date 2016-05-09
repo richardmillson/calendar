@@ -33,11 +33,19 @@ def generate_calendar(month, year, firstweekday):
     """
     given a month and year, creates a string of latex code that will compile into a pdf calendar for that month
     """
-    latex_file = "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent\n\\begin{calendar}{\hsize}"
+    latex_file = ""
+    latex_file += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
+                  "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
+    latex_file += "\n\\StartingDayNumber=" + str(firstweekday)
+    latex_file += "\n\\begin{center}\n\\textsc{\LARGE " + str(month) + " }% month" \
+                  "\n%\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
+    latex_file += "\n\\begin{calendar}{\hsize}"
     c = calendar.Calendar()
     c.setfirstweekday(firstweekday)
     for day in c.itermonthdays(year, month):
-        # latex_file += str(day)
-        pass
+        if day == 0:
+            latex_file += "\n\\setcounter{calendardate}{0}\n\\BlankDay"
+        else:
+            latex_file += "\n\\day{}{\\vspace{2.5cm}}"
     latex_file += "\n\\finishCalendar\n\\end{calendar}\n\\end{document}"
     return latex_file
