@@ -3,15 +3,16 @@
 # parse inputs
 # gui input
 # remove dependence on Sultanik's style
+# handle edge case formatting errors
 # recover day number from datetime object to include adjacent days outside the given month
+
+import calendar
 
 
 def generate_latex(month, year, firstweekday):
     """
     given a month and year, creates a string of latex code that will compile into a pdf calendar for that month
     """
-    import calendar
-
     latex_code = ""
     latex_code += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
@@ -21,8 +22,8 @@ def generate_latex(month, year, firstweekday):
     if latex_firstweekday == 0:
         latex_firstweekday = 7
     latex_code += "\n\\StartingDayNumber=" + str(latex_firstweekday)
-    latex_code += "\n\\begin{center}\n\\textsc{\LARGE " + str(month) + " }% month" \
-                  "\n%\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
+    latex_code += "\n\\begin{center}\n\\textsc{\LARGE " + calendar.month_name[month] + " }% month" \
+                  "\n\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
     latex_code += "\n\\begin{calendar}{\hsize}"
     c = calendar.Calendar()
     c.setfirstweekday(firstweekday)
@@ -35,7 +36,7 @@ def generate_latex(month, year, firstweekday):
     return latex_code
 
 
-def build_pdf(pdfname, tex):
+def build_pdf(file_name, latex_code):
     """
     build a pdf from a string
     """
@@ -44,34 +45,24 @@ def build_pdf(pdfname, tex):
     import tempfile
     import shutil
 
-    current = os.getcwd()
+    cwd = os.getcwd()
     temp = tempfile.mkdtemp()
     shutil.copy("calendar.sty", temp)
     os.chdir(temp)
 
     f = open("temp.tex", "w")
-    f.write(tex)
+    f.write(latex_code)
     f.close()
 
     proc = subprocess.Popen(["pdflatex", "temp.tex"])
-    subprocess.Popen(["pdflatex", tex])
+    subprocess.Popen(["pdflatex", latex_code])
     proc.communicate()
 
-    os.rename("temp.pdf", pdfname + ".pdf")
-    shutil.copy(pdfname + ".pdf", current)
+    os.rename("temp.pdf", file_name + ".pdf")
+    shutil.copy(file_name + ".pdf", cwd)
     shutil.rmtree(temp)
-
-    # f = open("temp.tex", "w")
-    # f.write(tex)
-    # f.close()
-    #
-    # proc = subprocess.Popen(["pdflatex", "temp.tex"])
-    # subprocess.Popen(["pdflatex", tex])
-    # proc.communicate()
-    #
-    # os.rename("temp.pdf", pdfname + ".pdf")
 
 
 def build_calendar(month, year, firstweekday):
     latex_code = generate_latex(month, year, firstweekday)
-    build_pdf(str(month), latex_code)
+    build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)

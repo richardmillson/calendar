@@ -3,7 +3,7 @@ from generate_calendar import *
 
 import calendar
 
-firstweekday = 6
+firstweekday = 5
 year = 2016
 month = 5
 
