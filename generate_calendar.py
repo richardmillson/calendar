@@ -36,6 +36,11 @@ def generate_calendar(month, year, firstweekday):
     latex_file = ""
     latex_file += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
+    # calendar.sty is one-based with 1 is Sunday while Lib/calendar.py is zero-based with 0 is Monday, 6 is Sunday
+    # we will use the convention from Lib/calendar.py for input and convert this to work with calendar.sty
+    firstweekday = (firstweekday + 2) % 7
+    if firstweekday == 0:
+        firstweekday = 7
     latex_file += "\n\\StartingDayNumber=" + str(firstweekday)
     latex_file += "\n\\begin{center}\n\\textsc{\LARGE " + str(month) + " }% month" \
                   "\n%\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
