@@ -1,13 +1,9 @@
 # TODO
-# generate latex code to work within Sultanik's template
-# compile latex code inside python
+# recover month names from numeric input
 # parse inputs
 # gui input
-# accept firstweekday as input
-# clean up temporary files
-# remove dependence on Sultanik's template
+# remove dependence on Sultanik's style
 # recover day number from datetime object to include adjacent days outside the given month
-#
 
 
 def generate_latex(month, year, firstweekday):
@@ -21,19 +17,16 @@ def generate_latex(month, year, firstweekday):
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
     # calendar.sty is one-based with 1 is Sunday while Lib/calendar.py is zero-based with 0 is Monday, 6 is Sunday
     # we will use the convention from Lib/calendar.py for input and convert this to work with calendar.sty
-    print firstweekday
-    firstweekday = (firstweekday + 2) % 7
-    if firstweekday == 0:
-        firstweekday = 7
-    print firstweekday
-    latex_code += "\n\\StartingDayNumber=" + str(firstweekday)
+    latex_firstweekday = (firstweekday + 2) % 7
+    if latex_firstweekday == 0:
+        latex_firstweekday = 7
+    latex_code += "\n\\StartingDayNumber=" + str(latex_firstweekday)
     latex_code += "\n\\begin{center}\n\\textsc{\LARGE " + str(month) + " }% month" \
                   "\n%\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
     latex_code += "\n\\begin{calendar}{\hsize}"
     c = calendar.Calendar()
     c.setfirstweekday(firstweekday)
     for day in c.itermonthdays(year, month):
-        print day,
         if day == 0:
             latex_code += "\n\\setcounter{calendardate}{0}\n\\BlankDay"
         else:
