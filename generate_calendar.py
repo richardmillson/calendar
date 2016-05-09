@@ -44,38 +44,39 @@ def generate_latex(month, year, firstweekday):
 
 def build_pdf(pdfname, tex):
     """
-    build the pdf from string
+    build a pdf from a string
     """
     import subprocess
     import os
     import tempfile
     import shutil
 
-    # current = os.getcwd()
-    # temp = tempfile.mkdtemp()
-    # os.chdir(temp)
-    #
-    # f = open("cover.tex", "w")
-    # f.write(tex)
-    # f.close()
-    #
-    # proc = subprocess.Popen(["pdflatex", "cover.tex"])
-    # subprocess.Popen(["pdflatex", tex])
-    # proc.communicate()
-    #
-    # os.rename("cover.pdf", pdfname)
-    # shutil.copy(pdfname, current)
-    # shutil.rmtree(temp)
+    current = os.getcwd()
+    temp = tempfile.mkdtemp()
+    shutil.copy("calendar.sty", temp)
+    os.chdir(temp)
 
-    f = open("cover.tex", "w")
+    f = open("temp.tex", "w")
     f.write(tex)
     f.close()
 
-    proc = subprocess.Popen(["pdflatex", "cover.tex"])
+    proc = subprocess.Popen(["pdflatex", "temp.tex"])
     subprocess.Popen(["pdflatex", tex])
     proc.communicate()
 
-    os.rename("cover.pdf", pdfname)
+    os.rename("temp.pdf", pdfname + ".pdf")
+    shutil.copy(pdfname + ".pdf", current)
+    shutil.rmtree(temp)
+
+    # f = open("temp.tex", "w")
+    # f.write(tex)
+    # f.close()
+    #
+    # proc = subprocess.Popen(["pdflatex", "temp.tex"])
+    # subprocess.Popen(["pdflatex", tex])
+    # proc.communicate()
+    #
+    # os.rename("temp.pdf", pdfname + ".pdf")
 
 
 def build_calendar(month, year, firstweekday):
