@@ -54,7 +54,7 @@ def build_pdf(file_name, latex_code):
     os.remove("temp.aux")
     os.remove("temp.log")
     os.remove("temp.tex")
-    os.remove("texput.log")
+    # os.remove("texput.log")
 
 
 def build_calendar(month, year, firstweekday):
