@@ -1,6 +1,5 @@
-*/
-*.pyc
 *.aux
 *.log
 *.tex
 *.pdf
+*.pyc

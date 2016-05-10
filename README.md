@@ -2,6 +2,8 @@ calendar
 ============
 [![Build Status](https://travis-ci.org/richardmillson/galois.svg)](https://travis-ci.org/richardmillson/galois)
 
-Pdf calendars of a month
+Build a pdf calendar of your month.
 
-Uses the calendar package created by Evan Sultanik.
+Requires pdflatex, which is included in TexLive.
+
+Uses the latex 'calendar' package by Evan Sultanik, included here as calendar.sty.

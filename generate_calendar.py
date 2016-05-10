@@ -27,6 +27,7 @@ def generate_latex(month, year, firstweekday):
     latex_code += "\n\\begin{center}\n\\textsc{\LARGE " + calendar.month_name[month] + " }% month" \
                   "\n\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
     latex_code += "\n\\begin{calendar}{\hsize}"
+
     c = calendar.Calendar()
     c.setfirstweekday(firstweekday)
     for day in c.itermonthdays(year, month):
@@ -34,13 +35,13 @@ def generate_latex(month, year, firstweekday):
             latex_code += "\n\\setcounter{calendardate}{0}\n\\BlankDay"
         else:
             latex_code += "\n\\day{}{\\vspace{2.5cm}}"
+
     latex_code += "\n\\finishCalendar\n\\end{calendar}\n\\end{document}"
     return latex_code
 
 
 def build_pdf(file_name, latex_code):
     """Build a pdf from a string of latex code"""
-
     cwd = os.getcwd()
     temp = tempfile.mkdtemp()
     shutil.copy("calendar.sty", temp)
