@@ -9,12 +9,11 @@ import calendar
 
 import subprocess
 import os
-import tempfile
-import shutil
 
 
 def generate_latex(month, year, firstweekday):
     """Return a string of latex code that would compile into a pdf calendar"""
+
     latex_code = ""
     latex_code += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
@@ -42,10 +41,6 @@ def generate_latex(month, year, firstweekday):
 
 def build_pdf(file_name, latex_code):
     """Build a pdf from a string of latex code"""
-    cwd = os.getcwd()
-    temp = tempfile.mkdtemp()
-    shutil.copy("calendar.sty", temp)
-    os.chdir(temp)
 
     f = open("temp.tex", "w")
     f.write(latex_code)
@@ -56,11 +51,14 @@ def build_pdf(file_name, latex_code):
     proc.communicate()
 
     os.rename("temp.pdf", file_name + ".pdf")
-    shutil.copy(file_name + ".pdf", cwd)
-    shutil.rmtree(temp)
+    os.remove("temp.aux")
+    os.remove("temp.log")
+    os.remove("temp.tex")
+    os.remove("texput.log")
 
 
 def build_calendar(month, year, firstweekday):
     """Build a pdf calendar"""
+
     latex_code = generate_latex(month, year, firstweekday)
     build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)
