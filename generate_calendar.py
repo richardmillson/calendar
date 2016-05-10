@@ -1,18 +1,20 @@
 # TODO
-# recover month names from numeric input
-# parse inputs
 # gui input
-# remove dependence on Sultanik's style
+# parse inputs
+# include adjacent days outside the given month
 # handle edge case formatting errors
-# recover day number from datetime object to include adjacent days outside the given month
+# remove dependence on Sultanik's style
 
 import calendar
 
+import subprocess
+import os
+import tempfile
+import shutil
+
 
 def generate_latex(month, year, firstweekday):
-    """
-    given a month and year, creates a string of latex code that will compile into a pdf calendar for that month
-    """
+    """Return a string of latex code that would compile into a pdf calendar"""
     latex_code = ""
     latex_code += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
@@ -37,13 +39,7 @@ def generate_latex(month, year, firstweekday):
 
 
 def build_pdf(file_name, latex_code):
-    """
-    build a pdf from a string
-    """
-    import subprocess
-    import os
-    import tempfile
-    import shutil
+    """Build a pdf from a string of latex code"""
 
     cwd = os.getcwd()
     temp = tempfile.mkdtemp()
@@ -64,5 +60,6 @@ def build_pdf(file_name, latex_code):
 
 
 def build_calendar(month, year, firstweekday):
+    """Build a pdf calendar"""
     latex_code = generate_latex(month, year, firstweekday)
     build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)

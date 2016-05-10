@@ -2,4 +2,6 @@ calendar
 ============
 [![Build Status](https://travis-ci.org/richardmillson/galois.svg)](https://travis-ci.org/richardmillson/galois)
 
-Enter a month and year and get a pdf calendar built from latex
+Pdf calendars of a month
+
+Uses the calendar package created by Evan Sultanik.
