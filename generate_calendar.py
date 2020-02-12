@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-# TODO gui input
-# TODO parse inputs
 # TODO include adjacent days outside the given month
 # TODO handle edge case formatting errors
 # TODO remove dependence on Sultanik's style
@@ -46,9 +44,7 @@ def build_pdf(file_name, latex_code):
 
     Path("temp.tex").write_text(latex_code)
 
-    proc = subprocess.Popen(["pdflatex", "temp.tex"])
-    subprocess.Popen(["pdflatex", latex_code])
-    proc.communicate()
+    subprocess.call(["pdflatex", "temp.tex"])
 
     Path("temp.pdf").rename(file_name + ".pdf")
     Path("temp.aux").unlink()
@@ -62,6 +58,7 @@ def build_calendar(year: int, month: int, firstweekday: int) -> None:
 
     latex_code = generate_latex(month, year, firstweekday)
     build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build a monthly calendar.")
