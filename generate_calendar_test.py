@@ -3,7 +3,7 @@ from generate_calendar import *
 
 firstweekday = 5
 year = 2016
-month = 5
+month = 6
 
 
 def test_generate_latex():

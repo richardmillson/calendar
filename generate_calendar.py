@@ -1,14 +1,14 @@
-# TODO
-# gui input
-# parse inputs
-# include adjacent days outside the given month
-# handle edge case formatting errors
-# remove dependence on Sultanik's style
+# TODO gui input
+# TODO parse inputs
+# TODO include adjacent days outside the given month
+# TODO handle edge case formatting errors
+# TODO remove dependence on Sultanik's style
 
 import calendar
 
 import subprocess
 import os
+import argparse
 
 
 def generate_latex(month, year, firstweekday):
@@ -17,8 +17,9 @@ def generate_latex(month, year, firstweekday):
     latex_code = ""
     latex_code += "\n\\documentclass[landscape,a4paper]{article}\n\\usepackage{calendar}" \
                   "\n\\usepackage[landscape,margin=0.6in]{geometry}\n\\begin{document}\n\\pagestyle{empty}\n\\noindent"
-    # calendar.sty is one-based with 1 is Sunday while Lib/calendar.py is zero-based with 0 is Monday, 6 is Sunday
-    # we will use the convention from Lib/calendar.py for input and convert this to work with calendar.sty
+    # calendar.sty is one-based where 1 is Sunday 
+    # while Lib/calendar.py is zero-based where 0 is Monday and 6 is Sunday
+    # use the convention from Lib/calendar.py for input and convert this to work with calendar.sty
     latex_firstweekday = (firstweekday + 2) % 7
     if latex_firstweekday == 0:
         latex_firstweekday = 7
@@ -57,8 +58,17 @@ def build_pdf(file_name, latex_code):
     # os.remove("texput.log")
 
 
-def build_calendar(month, year, firstweekday):
+def build_calendar(year: int, month: int, firstweekday: int) -> None:
     """Build a pdf calendar"""
 
     latex_code = generate_latex(month, year, firstweekday)
     build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Build a monthly calendar.")
+    parser.add_argument("year", type=int, help="the desired year")
+    parser.add_argument("month", type=int, help="the desired month as an integer [1-12]")
+    parser.add_argument("firstweekday", type=int, help="the desired first weekday [0 = Monday]")
+    args = parser.parse_args()
+    build_calendar(args.year, args.month, args.firstweekday)
+
