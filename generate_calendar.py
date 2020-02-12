@@ -44,13 +44,12 @@ def build_pdf(file_name, latex_code):
 
     Path("temp.tex").write_text(latex_code)
 
-    subprocess.call(["pdflatex", "temp.tex"])
+    subprocess.call(["pdflatex", "temp.tex"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     Path("temp.pdf").rename(file_name + ".pdf")
     Path("temp.aux").unlink()
     Path("temp.log").unlink()
     Path("temp.tex").unlink()
-    Path("texput.log").unlink()
 
 
 def build_calendar(year: int, month: int, firstweekday: int) -> None:
