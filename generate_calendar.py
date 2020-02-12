@@ -1,14 +1,15 @@
+#!/usr/bin/python3
+
 # TODO gui input
 # TODO parse inputs
 # TODO include adjacent days outside the given month
 # TODO handle edge case formatting errors
 # TODO remove dependence on Sultanik's style
 
-import calendar
-
-import subprocess
-import os
 import argparse
+import calendar
+import subprocess
+from pathlib import Path
 
 
 def generate_latex(month, year, firstweekday):
@@ -28,9 +29,9 @@ def generate_latex(month, year, firstweekday):
                   "\n\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
     latex_code += "\n\\begin{calendar}{\hsize}"
 
-    c = calendar.Calendar()
-    c.setfirstweekday(firstweekday)
-    for day in c.itermonthdays(year, month):
+    cal = calendar.Calendar()
+    cal.setfirstweekday(firstweekday)
+    for day in cal.itermonthdays(year, month):
         if day == 0:
             latex_code += "\n\\setcounter{calendardate}{0}\n\\BlankDay"
         else:
@@ -43,19 +44,17 @@ def generate_latex(month, year, firstweekday):
 def build_pdf(file_name, latex_code):
     """Build a pdf from a string of latex code"""
 
-    f = open("temp.tex", "w")
-    f.write(latex_code)
-    f.close()
+    Path("temp.tex").write_text(latex_code)
 
     proc = subprocess.Popen(["pdflatex", "temp.tex"])
     subprocess.Popen(["pdflatex", latex_code])
     proc.communicate()
 
-    os.rename("temp.pdf", file_name + ".pdf")
-    os.remove("temp.aux")
-    os.remove("temp.log")
-    os.remove("temp.tex")
-    # os.remove("texput.log")
+    Path("temp.pdf").rename(file_name + ".pdf")
+    Path("temp.aux").unlink()
+    Path("temp.log").unlink()
+    Path("temp.tex").unlink()
+    Path("texput.log").unlink()
 
 
 def build_calendar(year: int, month: int, firstweekday: int) -> None:
