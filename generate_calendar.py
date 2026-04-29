@@ -37,7 +37,7 @@ def generate_latex(month: int, year: int, firstweekday: int) -> str:
         if day == 0:
             latex_code += "\n  \\setcounter{calendardate}{0}\n  \\BlankDay"
         else:
-            latex_code += "\n  \\day{}{\\vspace{2.5cm}}"
+            latex_code += "\n  \\day{}{\\vspace{2.0cm}}"
 
     latex_code += "\n\\finishCalendar\n\\end{calendar}\n\\end{document}"
     return latex_code
