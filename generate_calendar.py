@@ -26,8 +26,8 @@ def generate_latex(month: int, year: int, firstweekday: int) -> str:
         latex_firstweekday = 7
     latex_code += "\n\\StartingDayNumber=" + str(latex_firstweekday)
     latex_code += (
-        "\n\\begin{center}\n\\textsc{\\LARGE " + calendar.month_name[month] + " } % month"
-        "\n\\textsc{\\LARGE " + str(year) + "} % year\n\\end{center}"
+        "\n\\begin{center}\n  \\textsc{\\LARGE " + calendar.month_name[month] + "} % month"
+        "\n  \\textsc{\\LARGE " + str(year) + "} % year\n\\end{center}"
     )
     latex_code += "\n\\begin{calendar}{\\hsize}"
 
@@ -35,9 +35,9 @@ def generate_latex(month: int, year: int, firstweekday: int) -> str:
     cal.setfirstweekday(firstweekday)
     for day in cal.itermonthdays(year, month):
         if day == 0:
-            latex_code += "\n\\setcounter{calendardate}{0}\n\\BlankDay"
+            latex_code += "\n  \\setcounter{calendardate}{0}\n  \\BlankDay"
         else:
-            latex_code += "\n\\day{}{\\vspace{2.5cm}}"
+            latex_code += "\n  \\day{}{\\vspace{2.5cm}}"
 
     latex_code += "\n\\finishCalendar\n\\end{calendar}\n\\end{document}"
     return latex_code

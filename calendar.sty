@@ -4,11 +4,12 @@
 \def\CalendarVersionDate{2009/04/24}
 
 \ProvidesClass{calendar}[\CalendarVersionDate
-           LaTeX2e class file `calendar' v\CalendarVersion]
+LaTeX2e class file `calendar' v\CalendarVersion]
 
 \typeout{'calendar' style \CalendarVersion \CalendarVersionDate.}
 \typeout{Created by Evan Sultanik}
-\typeout{****** Bugs/comments/suggestions/technicalities to Evan Sultanik -- evan@sultanik.com ******}
+\typeout{****** Bugs/comments/suggestions/technicalities to Evan
+Sultanik -- evan@sultanik.com ******}
 
 \RequirePackage{tabularx}
 
@@ -46,7 +47,7 @@
   \ifnum#1=5 Thursday\else
   \ifnum#1=6 Friday\else
   \ifnum#1=7 Saturday\else
-    \PackageError{calendar}{Unrecognized day number: #1!}
+  \PackageError{calendar}{Unrecognized day number: #1!}
   \fi\fi\fi\fi\fi\fi\fi
 }
 
@@ -55,67 +56,77 @@
   \newdimen\@calendarwidth
   \@calendarwidth=#1
   \begingroup
-    \def\@calendarmode{\@CALtrue}
+  \def\@calendarmode{\@CALtrue}
 
-\def\day##1##2{
-  \if\@calendarmode\@CALtrue\else\PackageWarning{calendar}{The '\day' macro is expected to be used in the 'calendar' environment!}\fi
-  \ifnum\@currentdaynum>7\global\@currentdaynum=1\fi
-  \global\advance\@currentdaynum by 1
-  \dayheader{##1}{\thecalendardate}\def\daysep{\vskip1pt\hrule\vskip1pt}
-  \activities{##2}
-  \addtocounter{calendardate}{1}
-  \ifnum\@currentdaynum>7
+  \def\day##1##2{
+    \if\@calendarmode\@CALtrue\else\PackageWarning{calendar}{The
+    '\day' macro is expected to be used in the 'calendar' environment!}\fi
+    \ifnum\@currentdaynum>7\global\@currentdaynum=1\fi
+    \global\advance\@currentdaynum by 1
+    \dayheader{##1}{\thecalendardate}\def\daysep{\vskip1pt\hrule\vskip1pt}
+    \activities{##2}
+    \addtocounter{calendardate}{1}
+    \ifnum\@currentdaynum>7
     \def\@calnext{\@arraycr\hline}%
-  \else
+    \else
     \def\@calnext{&}%
-  \fi
-  \@calnext
-}
+    \fi
+    \@calnext
+  }
 
-\def\finishCalendar{%
-\ifnum\@currentdaynum<8
-  \def\@calnext{}%
-  \ifnum\@currentdaynum=7 \def\@calnext{\@arraycr\hline}\else
-  \ifnum\@currentdaynum=6 \def\@calnext{&\@arraycr\hline}\else
-  \ifnum\@currentdaynum=5 \def\@calnext{&&\@arraycr\hline}\else
-  \ifnum\@currentdaynum=4 \def\@calnext{&&&\@arraycr\hline}\else
-  \ifnum\@currentdaynum=3 \def\@calnext{&&&&\@arraycr\hline}\else
-  \ifnum\@currentdaynum=2 \def\@calnext{&&&&&\@arraycr\hline}\else
-  \ifnum\@currentdaynum=1 \def\@calnext{&&&&&&\@arraycr\hline}%
-  \fi\fi\fi\fi\fi\fi\fi
-  \@calnext
-\fi}
+  \def\finishCalendar{%
+    \ifnum\@currentdaynum<8
+    \def\@calnext{}%
+    \ifnum\@currentdaynum=7 \def\@calnext{\@arraycr\hline}\else
+    \ifnum\@currentdaynum=6 \def\@calnext{&\@arraycr\hline}\else
+    \ifnum\@currentdaynum=5 \def\@calnext{&&\@arraycr\hline}\else
+    \ifnum\@currentdaynum=4 \def\@calnext{&&&\@arraycr\hline}\else
+    \ifnum\@currentdaynum=3 \def\@calnext{&&&&\@arraycr\hline}\else
+    \ifnum\@currentdaynum=2 \def\@calnext{&&&&&\@arraycr\hline}\else
+    \ifnum\@currentdaynum=1 \def\@calnext{&&&&&&\@arraycr\hline}%
+    \fi\fi\fi\fi\fi\fi\fi
+    \@calnext
+  \fi}
 
-\def\BlankDay{
-  \if\@calendarmode\@CALtrue\else\PackageWarning{calendar}{The '\calendarday' macro is expected to be used in the 'calendar' environment!}\fi
-  \ifnum\@currentdaynum>7\global\@currentdaynum=1\fi
-  \global\advance\@currentdaynum by 1
-  \addtocounter{calendardate}{1}
-  \ifnum\@currentdaynum>7
+  \def\BlankDay{
+    \if\@calendarmode\@CALtrue\else\PackageWarning{calendar}{The
+      '\calendarday' macro is expected to be used in the 'calendar'
+    environment!}\fi
+    \ifnum\@currentdaynum>7\global\@currentdaynum=1\fi
+    \global\advance\@currentdaynum by 1
+    \addtocounter{calendardate}{1}
+    \ifnum\@currentdaynum>7
     \def\@calnext{\@arraycr\hline}%
-  \else
+    \else
     \def\@calnext{&}%
-  \fi
-  \@calnext
-}
+    \fi
+    \@calnext
+  }
 
-    \setcounter{calendardate}{1}
-    \newcount\@currday
-    \@currday=\StartingDayNumber
-    \newcount\@numdays
-    \@numdays=7
-    \let\@cbreak=&
-    \tabularx{\@calendarwidth}{|X|X|X|X|X|X|X|} \hline
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 &
-    \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}} \global\advance\@currday by 1 \\ \hline \hline
-      \@currentdaynum=1
-      \let\@firstline=\@CALtrue
+  \setcounter{calendardate}{1}
+  \newcount\@currday
+  \@currday=\StartingDayNumber
+  \newcount\@numdays
+  \@numdays=7
+  \let\@cbreak=&
+  \tabularx{\@calendarwidth}{|X|X|X|X|X|X|X|} \hline
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 &
+  \ifnum\@currday>\@numdays\@currday=1\fi\printdayname{\dayname{\@currday}}
+  \global\advance\@currday by 1 \\ \hline \hline
+  \@currentdaynum=1
+  \let\@firstline=\@CALtrue
 }{
-    \endtabularx
+  \endtabularx
   \endgroup
 }
