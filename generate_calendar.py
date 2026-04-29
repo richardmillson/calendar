@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 
 
-def generate_latex(month, year, firstweekday):
+def generate_latex(month: int, year: int, firstweekday: int) -> str:
     """Return a string of latex code that would compile into a pdf calendar"""
 
     latex_code = ""
@@ -26,10 +26,10 @@ def generate_latex(month, year, firstweekday):
         latex_firstweekday = 7
     latex_code += "\n\\StartingDayNumber=" + str(latex_firstweekday)
     latex_code += (
-        "\n\\begin{center}\n\\textsc{\LARGE " + calendar.month_name[month] + " }% month"
-        "\n\\textsc{\LARGE " + str(year) + "} % year\n\\end{center}"
+        "\n\\begin{center}\n\\textsc{\\LARGE " + calendar.month_name[month] + " } % month"
+        "\n\\textsc{\\LARGE " + str(year) + "} % year\n\\end{center}"
     )
-    latex_code += "\n\\begin{calendar}{\hsize}"
+    latex_code += "\n\\begin{calendar}{\\hsize}"
 
     cal = calendar.Calendar()
     cal.setfirstweekday(firstweekday)
@@ -43,7 +43,7 @@ def generate_latex(month, year, firstweekday):
     return latex_code
 
 
-def build_pdf(file_name, latex_code):
+def build_pdf(file_name: str, latex_code: str) -> None:
     """Build a pdf from a string of latex code"""
 
     Path("temp.tex").write_text(latex_code)
@@ -58,21 +58,27 @@ def build_pdf(file_name, latex_code):
     Path("temp.tex").unlink()
 
 
-def build_calendar(year: int, month: int, firstweekday: int) -> None:
+def build_calendar(year: int, month: int, firstweekday: int, tex: bool = False) -> None:
     """Build a pdf calendar"""
 
     latex_code = generate_latex(month, year, firstweekday)
-    build_pdf("calendar_" + calendar.month_name[month] + "_" + str(year), latex_code)
+    file_name = f"calendar_{year}-{month:02}"
+    if tex:
+        Path(f"{file_name}.tex").write_text(latex_code)
+    else:
+        build_pdf(file_name, latex_code)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Build a monthly calendar.")
-    parser.add_argument("year", type=int, help="the desired year")
+    parser = argparse.ArgumentParser(description="Build a monthly calendar")
+    parser.add_argument("year", type=int, help="The year")
     parser.add_argument(
-        "month", type=int, help="the desired month as an integer [1-12]"
+        "month", type=int, help="The month as an integer [1-12]"
     )
     parser.add_argument(
-        "firstweekday", type=int, help="the desired first weekday [0 = Monday]"
+        "firstweekday", type=int, help="The first weekday [0 = Monday]"
     )
+    parser.add_argument("--tex", action="store_true", help="Whether to generate a tex file instead of a pdf")
     args = parser.parse_args()
-    build_calendar(args.year, args.month, args.firstweekday)
+    build_calendar(args.year, args.month, args.firstweekday, args.tex)
+
